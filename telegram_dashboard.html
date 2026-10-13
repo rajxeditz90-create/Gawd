@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✈️ Telegram Master Matrix | Userbot + Multi-Bot Swarm & Broadcaster</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(10, 24, 46, 0.85);
+      --card-border: rgba(0, 136, 204, 0.35);
+      --primary: #0088cc;
+      --primary-hover: #00a2f5;
+      --cyan: #00f2fe;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --purple: #8b5cf6;
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
+      --input-bg: rgba(5, 15, 30, 0.92);
+      --input-border: rgba(255, 255, 255, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 15%, rgba(0, 136, 204, 0.22) 0%, transparent 45%),
+        radial-gradient(circle at 90% 85%, rgba(0, 242, 254, 0.18) 0%, transparent 45%),
+        linear-gradient(135deg, #030712 0%, #08162b 50%, #020408 100%);
+      color: var(--text-main);
+      padding-bottom: 60px;
+    }
+
+    .topbar {
+      padding: 16px 28px;
+      background: rgba(6, 16, 32, 0.92);
+      backdrop-filter: blur(25px);
+      border-bottom: 1px solid rgba(0, 136, 204, 0.35);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    .topbar-title {
+      font-size: 20px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-nav {
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-nav:hover { background: rgba(0, 136, 204, 0.35); border-color: var(--primary); }
+
+    .btn-logout {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+
+    .btn-logout:hover { background: #ef4444; color: #ffffff; }
+
+    .session-timer {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: #38bdf8;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 6px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    /* Tabs Bar */
+    .tab-bar {
+      max-width: 1450px;
+      margin: 20px auto 0 auto;
+      padding: 0 20px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(8, 20, 38, 0.7);
+      color: #94a3b8;
+      font-weight: 800;
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: all 0.25s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-btn:hover {
+      background: rgba(0, 136, 204, 0.2);
+      color: #ffffff;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(0, 136, 204, 0.8) 0%, rgba(0, 85, 128, 0.8) 100%);
+      color: #ffffff;
+      border-color: var(--cyan);
+      box-shadow: 0 4px 18px rgba(0, 136, 204, 0.4);
+    }
+
+    .container {
+      max-width: 1450px;
+      margin: 20px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 1024px) {
+      .container { grid-template-columns: 1fr; }
+    }
+
+    .box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 22px;
+      backdrop-filter: blur(22px);
+      padding: 24px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.55);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .box-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #ffffff;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 12px;
+    }
+
+    .badge {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .badge-online { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; }
+    .badge-disconnected { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
+    .badge-busy { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #f59e0b; }
+    .badge-cyan { background: rgba(0, 242, 254, 0.2); color: #38bdf8; border: 1px solid #00f2fe; }
+
+    label {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #cbd5e1;
+      margin-top: 12px;
+      display: block;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px 14px;
+      margin-top: 6px;
+      border-radius: 12px;
+      border: 1px solid var(--input-border);
+      outline: none;
+      color: #ffffff;
+      background: var(--input-bg);
+      font-size: 13.5px;
+      transition: all 0.2s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 14px rgba(0, 136, 204, 0.4);
+    }
+
+    .btn-action {
+      width: 100%;
+      padding: 13px;
+      margin-top: 14px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 14px;
+      transition: all 0.25s;
+      background: linear-gradient(135deg, #0088cc 0%, #005580 100%);
+      box-shadow: 0 6px 20px rgba(0, 136, 204, 0.35);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 136, 204, 0.55);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: none;
+    }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.15); }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%);
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.35);
+    }
+    .btn-danger:hover { box-shadow: 0 8px 25px rgba(239, 68, 68, 0.55); }
+
+    .node-card {
+      background: rgba(4, 12, 22, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-left: 4px solid var(--primary);
+      border-radius: 16px;
+      padding: 18px;
+      margin-top: 14px;
+      transition: all 0.2s;
+    }
+
+    .node-card:hover {
+      border-color: var(--primary);
+      background: rgba(6, 18, 34, 0.88);
+      box-shadow: 0 8px 25px rgba(0, 136, 204, 0.2);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-small {
+      flex: 1;
+      min-width: 80px;
+      padding: 9px 12px;
+      border: none;
+      border-radius: 9px;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+      color: #ffffff;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .btn-start { background: #10b981; }
+    .btn-start:hover { background: #059669; }
+    .btn-stop { background: #f59e0b; color: #000; }
+    .btn-stop:hover { background: #d97706; }
+    .btn-del { background: #ef4444; }
+    .btn-del:hover { background: #dc2626; }
+
+    pre {
+      white-space: pre-wrap;
+      color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.6;
+      background: rgba(0, 0, 0, 0.55);
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      max-height: 320px;
+      overflow-y: auto;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(14px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .modal-box {
+      background: #081526;
+      border: 1px solid var(--primary);
+      border-radius: 22px;
+      padding: 26px;
+      max-width: 440px;
+      width: 92%;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 35px rgba(0, 136, 204, 0.35);
+      text-align: center;
+    }
+
+    .qr-container {
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 16px;
+      display: inline-block;
+      margin: 16px 0;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .menu-box {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 880px) {
+      .topbar {
+        padding: 12px 14px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+      .topbar-title {
+        font-size: 16px;
+      }
+      .topbar-actions {
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 6px;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .topbar-actions::-webkit-scrollbar { display: none; }
+      .btn-nav, .btn-logout, .session-timer {
+        padding: 7px 12px;
+        font-size: 12px;
+        flex-shrink: 0;
+      }
+      .tab-bar {
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: 6px;
+        gap: 6px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .tab-bar::-webkit-scrollbar { display: none; }
+      .tab-btn {
+        flex: none;
+        min-width: max-content;
+        padding: 10px 14px;
+        font-size: 13px;
+      }
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .box {
+        padding: 18px 14px;
+        border-radius: 16px;
+      }
+      input, textarea, select {
+        font-size: 16px;
+      }
+      .status-box {
+        max-height: 280px;
+        font-size: 11px;
+        padding: 12px;
+      }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-title">
+      <span style="font-size:24px;">✈️</span>
+      <div>TELEGRAM <strong>MASTER MATRIX</strong></div>
+    </div>
+
+    <div class="topbar-actions">
+      <a href="/telegram_master" class="btn-nav" style="border-color:var(--cyan);background:rgba(0,136,204,0.35);">✈️ TELEGRAM</a>
+      {% if role == 'owner' %}
+      <a href="/owner" class="btn-nav" style="border-color:var(--gold);background:rgba(250,204,21,0.25);color:var(--gold);">👑 OWNER</a>
+      {% endif %}
+      <button class="btn-nav" style="border-color:var(--cyan);background:rgba(0,255,204,0.15);color:var(--cyan);" onclick="openProfileModal()">👤 PROFILE</button>
+      <span class="session-timer" id="sessionTimerDisplay">06h 00m 00s</span>
+      <a href="/logout" class="btn-nav btn-logout">🚪 LOGOUT</a>
+    </div>
+  </header>
+
+  <!-- TAB SELECTION -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('userbot')">
+      👤 Telethon Userbots (<span id="tabUbCount">0</span>)
+    </button>
+    <button class="tab-btn" onclick="switchTab('swarm')">
+      👑 LOST GOD Multi-Bot (<span id="tabSwarmCount">0</span>)
+    </button>
+    <button class="tab-btn" onclick="switchTab('guide')">
+      📜 All Commands Matrix
+    </button>
+    <button class="tab-btn" onclick="switchTab('logs')">
+      💻 Live Terminal Logs
+    </button>
+  </div>
+
+  <main class="container">
+    
+    <!-- ================= TAB 1: TELEGRAM USERBOT ENGINE ================= -->
+    <div id="userbotTabLeft" class="box">
+      <div class="box-title">
+        <span>👤 Connect New Telethon Userbot</span>
+        <span class="badge badge-cyan">STRING SESSION</span>
+      </div>
+
+      <label>📱 Telegram Phone Number (with Country Code):</label>
+      <input id="ubPhone" placeholder="e.g. +919507325677 or +918986269256">
+
+      <label>👑 Telegram Admin / Sudo User ID (Only this ID executes commands):</label>
+      <input id="ubAdminId" placeholder="e.g. 8746273317">
+
+      <div class="btn-row">
+        <button class="btn-action" onclick="sendUserbotOtp()" style="margin-top:0;">
+          📩 Send Telegram OTP Code
+        </button>
+        <button class="btn-action btn-secondary" onclick="generateUserbotQr()" style="margin-top:0;">
+          📱 Scan QR Code Login
+        </button>
+      </div>
+
+      <!-- OTP Input Area -->
+      <div id="otpSection" style="display:none;margin-top:14px;background:rgba(0,136,204,0.1);padding:14px;border-radius:12px;border:1px solid rgba(0,136,204,0.3);">
+        <label style="margin-top:0;color:#38bdf8;">🔑 Enter 5-Digit Telegram OTP Code:</label>
+        <input id="ubOtpCode" placeholder="e.g. 12345" style="letter-spacing:4px;font-size:16px;font-weight:700;">
+        <button class="btn-action" onclick="verifyUserbotOtp()" style="background:#10b981;">
+          🔓 Verify & Link Userbot
+        </button>
+      </div>
+
+      <!-- 2FA Input Area (Inline Fallback) -->
+      <div id="twoFaSection" style="display:none;margin-top:14px;background:rgba(245,158,11,0.1);padding:14px;border-radius:12px;border:1px solid rgba(245,158,11,0.3);">
+        <label style="margin-top:0;color:#fbbf24;">🔐 2-Step Verification (2FA) Password Required:</label>
+        <input id="ub2FaPass" type="password" placeholder="Enter your Telegram 2FA Cloud Password">
+        <button class="btn-action" onclick="verifyUserbot2Fa()" style="background:#f59e0b;color:#000;">
+          🔐 Submit 2FA Password
+        </button>
+      </div>
+
+      <div style="font-size:12.5px;color:#94a3b8;margin-top:14px;line-height:1.6;">
+        💡 <strong>Quick Instructions:</strong> Enter your Telegram phone number or scan QR code. Sessions are stored securely in MongoDB Atlas and resume automatically.
+      </div>
+    </div>
+
+    <!-- Active Userbot List (Right Panel) -->
+    <div id="userbotTabRight" class="box">
+      <div class="box-title">
+        <span>⚡ Connected Userbot Sessions</span>
+        <span id="ubCountBadge" class="badge badge-cyan">0 Linked</span>
+      </div>
+
+      <div id="userbotsList">
+        <p style="color:#94a3b8;font-size:13px;margin-top:10px;">No userbot sessions linked yet. Send OTP or scan QR to connect.</p>
+      </div>
+    </div>
+
+    <!-- ================= TAB 2: LOST GOD MULTI-BOT MATRIX ================= -->
+    <div id="swarmTabLeft" class="box" style="display:none;">
+      <div class="box-title">
+        <span>👑 Deploy LOST GOD Multi-Bot</span>
+        <span class="badge badge-online">EXTREME MATRIX</span>
+      </div>
+
+      <label>🔑 Bot Tokens (Paste 1 to 50+ tokens from @BotFather, one per line):</label>
+      <textarea id="swarmTokens" style="height:120px;font-family:'JetBrains Mono', monospace;font-size:12.5px;" placeholder="8921693801:AAHwMAVPZTUWCMFBbgnAl9Vy7qJpsXtudpg&#10;8710594664:AAE6WWo69gZiz72szCRQ2vHAdLam97HsbPY"></textarea>
+
+      <div class="grid-2">
+        <div>
+          <label>👑 Bot Owner / Sudo ID:</label>
+          <input id="swarmAdminId" placeholder="e.g. 8746273317">
+        </div>
+        <div>
+          <label>⚡ Command Prefix:</label>
+          <input id="swarmPrefix" value="-" placeholder="e.g. - or ! or /">
+        </div>
+      </div>
+
+      <button class="btn-action" onclick="saveAndStartSwarm()">
+        🚀 Deploy & Launch LOST GOD Multi-Bot
+      </button>
+
+      <div style="font-size:12px;color:#94a3b8;margin-top:12px;line-height:1.5;">
+        ⚡ <strong>Pro Tip:</strong> All speed tuning (burst limit, dynamic delays, injection mode) can be controlled in real-time via Telegram commands: <code>-burst 5</code>, <code>-setdelay burst 0.001</code>, <code>-ijt on</code>!
+      </div>
+    </div>
+
+    <!-- Active Swarms List (Right Panel) -->
+    <div id="swarmTabRight" class="box" style="display:none;">
+      <div class="box-title">
+        <span>👑 Active LOST GOD Multi-Bots</span>
+        <span id="swarmCountBadge" class="badge badge-cyan">0 Active</span>
+      </div>
+
+      <div id="swarmsList">
+        <p style="color:#94a3b8;font-size:13px;margin-top:10px;">No multi-bots deployed yet. Add tokens on the left to deploy.</p>
+      </div>
+    </div>
+
+    <!-- ================= TAB 3: COMMAND MATRIX GUIDE ================= -->
+    <div id="guideTab" class="box menu-box" style="display:none;">
+      <div class="box-title">
+        <span>📜 Full Command Matrix (Userbot & LOST GOD Multi-Bot)</span>
+        <span class="badge badge-cyan">ALL FEATURES</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:16px;font-size:13px;color:#cbd5e1;">
+        
+        <div style="background:rgba(4,12,22,0.65);padding:16px;border-radius:14px;border-left:4px solid var(--cyan);">
+          <strong style="color:#00f2fe;display:block;margin-bottom:8px;font-size:14px;">⚔️ [ MULTI-BOT RUSH & OVERLAPPING BURST ]</strong>
+          <p><code>-ncfrush &lt;txt&gt;</code> ➪ 🚀 Extreme Fast Fight Parallel Rush</p>
+          <p><code>-nctrush &lt;txt&gt;</code> ➪ ⏳ Live Timestamp Rename Rush</p>
+          <p><code>-ncemorush &lt;txt&gt;</code> ➪ 🤡 High-Speed Emoji Rename Rush</p>
+          <p><code>-ncloop &lt;txt&gt;</code> ➪ 🔄 Round-Robin Overlapping Burst</p>
+          <p><code>-burst &lt;num&gt;</code> ➪ ⚙️ Set Burst Overlap Limit (1-50)</p>
+          <p><code>-ijt on / off</code> ➪ 💉 Overlap Rivals (Injection Mode)</p>
+          <p><code>-stopnc</code> ➪ 🛑 Stop All Rename Warfare</p>
+        </div>
+
+        <div style="background:rgba(4,12,22,0.65);padding:16px;border-radius:14px;border-left:4px solid var(--primary);">
+          <strong style="color:#38bdf8;display:block;margin-bottom:8px;font-size:14px;">👥 [ MULTI-BOT GROUP MANAGEMENT & MODERATION ]</strong>
+          <p><code>-addmember &lt;@user|id&gt;</code> ➪ ➕ Add Members via Multi-Bot</p>
+          <p><code>-kick &lt;@user&gt;</code> ➪ 🚪 Kick Disruptive User</p>
+          <p><code>-ban &lt;@user&gt;</code> | <code>-unban &lt;@user&gt;</code> ➪ 🚫 Ban / Unban</p>
+          <p><code>-mute &lt;@user&gt;</code> | <code>-unmute &lt;@user&gt;</code> ➪ 🤐 Restrict Chat</p>
+          <p><code>-pin</code> (reply) | <code>-unpin</code> ➪ 📌 Instant Chat Pin</p>
+          <p><code>-tagall &lt;msg&gt;</code> ➪ 📢 Multi-Bot Mass Mention Tag</p>
+          <p><code>-purge</code> | <code>-unpurge</code> ➪ 🗑️ Stealth Auto-Purge Non-Bots</p>
+        </div>
+
+        <div style="background:rgba(4,12,22,0.65);padding:16px;border-radius:14px;border-left:4px solid var(--purple);">
+          <strong style="color:#c084fc;display:block;margin-bottom:8px;font-size:14px;">🖼️ [ MULTI-BOT MEDIA & TTS ATTACKS ]</strong>
+          <p><code>-pic</code> (reply) ➪ 🖼️ Parallel 0.01s Mass PFP Rush</p>
+          <p><code>-stoppic</code> ➪ 🛑 Stop PFP Rush</p>
+          <p><code>-voice &lt;txt&gt;</code> ➪ 🎤 Hindi/English TTS Voice Loop</p>
+          <p><code>-stopvoice</code> ➪ 🛑 Stop Voice Loop</p>
+          <p><code>-vn</code> (reply) ➪ 🔊 Save & Multi-Bot VN Spam</p>
+          <p><code>-stopvn</code> ➪ 🛑 Stop VN Spam</p>
+          <p><code>-picraid</code> (reply) ➪ 📸 Save & Photo Spam</p>
+          <p><code>-stoppicraid</code> ➪ 🛑 Stop Photo Spam</p>
+        </div>
+
+        <div style="background:rgba(4,12,22,0.65);padding:16px;border-radius:14px;border-left:4px solid var(--green);">
+          <strong style="color:#34d399;display:block;margin-bottom:8px;font-size:14px;">📢 [ MULTI-BOT SPAM, RAID & CONTROLS ]</strong>
+          <p><code>-spamloop &lt;txt&gt; &lt;lines&gt;</code> ➪ 🌀 Clean Multi-Line Bomber</p>
+          <p><code>-spam &lt;target&gt;</code> ➪ 💥 Extreme Target Insult Attack</p>
+          <p><code>-raid &lt;count&gt; &lt;@user&gt;</code> ➪ ⚔️ Multi-Bot Parallel Raid</p>
+          <p><code>-swp [prefix]</code> | <code>-stp</code> ➪ ⚡ Auto-Reply Counter Swipe</p>
+          <p><code>-react &lt;emoji&gt;</code> | <code>-globalreact</code> ➪ 🤣 Reaction Engine</p>
+          <p><code>-addall</code> | <code>-upall</code> | <code>-promoteall</code> ➪ 🤖 Swarm Admin Sync</p>
+          <p><code>-sts</code> ➪ 📊 Real-Time Swarm Telemetry & Metrics</p>
+        </div>
+
+        <div style="background:rgba(4,12,22,0.65);padding:16px;border-radius:14px;border-left:4px solid #f59e0b;">
+          <strong style="color:#fbbf24;display:block;margin-bottom:8px;font-size:14px;">📞 [ USERBOT VOICE & VC STREAMING ]</strong>
+          <p><code>+play1call</code> ➪ Stream 51.mp3 Audio in VC/Call</p>
+          <p><code>+play2call</code> ➪ Stream 52.mp4 Screen Share Video</p>
+          <p><code>+play3jio &lt;song&gt;</code> ➪ Stream Live Full JioSaavn Audio</p>
+          <p><code>+stopcallplay</code> | <code>+cutcall</code> ➪ Call Controls</p>
+          <p><code>+loopunmute</code> ➪ Auto Unmute Guard Loop</p>
+          <p><code>+song &lt;title&gt;</code> ➪ JioSaavn 320kbps MP3 Downloader</p>
+          <p><code>+font &lt;text&gt;</code> | <code>+q</code> ➪ 3D Banner & Quote Maker</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================= TAB 4: LIVE TERMINAL LOGS ================= -->
+    <div id="logsTab" class="box menu-box" style="display:none;">
+      <div class="box-title">
+        <span>📡 Telegram Master Live Telemetry & Global Terminal</span>
+        <button class="btn-nav" onclick="loadTgMasterStatus()" style="padding:4px 10px;font-size:11px;">🔄 REFRESH</button>
+      </div>
+      <pre id="tgStatusBox">Connecting to Telegram Master Engine telemetry...</pre>
+    </div>
+
+  </main>
+
+  <!-- QR CODE MODAL -->
+  <div id="qrModal" class="modal-overlay">
+    <div class="modal-box">
+      <h3 style="color:#ffffff;font-size:19px;font-weight:900;">📱 Scan Telegram Login QR Code</h3>
+      <p style="color:#94a3b8;font-size:12.5px;margin-top:6px;line-height:1.5;">
+        1️⃣ Open <strong>Telegram</strong> on your phone.<br>
+        2️⃣ Go to <strong>Settings ➔ Devices ➔ Link Desktop Device</strong>.<br>
+        3️⃣ Point camera at this QR code to scan!
+      </p>
+      <div class="qr-container" id="qrContainer"></div>
+      <div id="qrTimer" style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;color:#f59e0b;margin-bottom:6px;">⏱ 30s remaining</div>
+      <div id="qrStatus" style="font-size:13px;font-weight:800;color:#38bdf8;margin-bottom:14px;">⚡ Awaiting Scan in Telegram App...</div>
+      
+      <div class="btn-row" style="margin-top:10px;">
+        <button id="btnRegenQr" class="btn-action btn-start" onclick="generateUserbotQr()" style="display:none;margin-top:0;">
+          🔄 Regenerate New QR Code
+        </button>
+        <button class="btn-action btn-danger" onclick="closeQrModal()" style="margin-top:0;">
+          Close Scanner
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEDICATED 2FA PASSWORD MODAL -->
+  <div id="twoFaModal" class="modal-overlay">
+    <div class="modal-box" style="border-color:#f59e0b;box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 35px rgba(245, 158, 11, 0.4);">
+      <div style="font-size:42px;margin-bottom:6px;">🔐</div>
+      <h3 style="color:#ffffff;font-size:19px;font-weight:900;">2-Step Verification Password</h3>
+      <p style="color:#cbd5e1;font-size:12.5px;margin-top:6px;line-height:1.5;">
+        Your Telegram account has <strong>Two-Step Verification (2FA)</strong> enabled.<br>
+        Please enter your Cloud Password below to complete connection:
+      </p>
+
+      <div style="margin-top:14px;text-align:left;">
+        <label style="color:#fbbf24;font-size:12px;font-weight:800;">🔑 Telegram 2FA Password:</label>
+        <input id="modal2FaPass" type="password" placeholder="Enter your 2FA Password" style="font-size:15px;letter-spacing:1.5px;">
+        <div id="twoFaErrorText" style="display:none;color:#f87171;font-size:12px;font-weight:700;margin-top:6px;"></div>
+      </div>
+
+      <div class="btn-row" style="margin-top:18px;">
+        <button class="btn-action" onclick="submitModal2Fa()" style="background:#f59e0b;color:#000;margin-top:0;">
+          🔓 Submit 2FA & Connect
+        </button>
+        <button class="btn-action btn-danger" onclick="closeTwoFaModal()" style="margin-top:0;">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let activeQrInterval = null;
+    let current2FaIdentifier = "";
+
+    function switchTab(tab) {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      event.currentTarget.classList.add("active");
+
+      document.getElementById("userbotTabLeft").style.display = (tab === 'userbot') ? 'flex' : 'none';
+      document.getElementById("userbotTabRight").style.display = (tab === 'userbot') ? 'flex' : 'none';
+      document.getElementById("swarmTabLeft").style.display = (tab === 'swarm') ? 'flex' : 'none';
+      document.getElementById("swarmTabRight").style.display = (tab === 'swarm') ? 'flex' : 'none';
+      document.getElementById("guideTab").style.display = (tab === 'guide') ? 'flex' : 'none';
+      document.getElementById("logsTab").style.display = (tab === 'logs') ? 'flex' : 'none';
+    }
+
+    // --- USERBOT OTP SEND ---
+    async function sendUserbotOtp() {
+      const phone = document.getElementById("ubPhone").value.trim();
+      const admin_id = document.getElementById("ubAdminId").value.trim();
+      if (!phone) {
+        alert("Please enter your Telegram phone number with country code (e.g. +919507325677)!");
+        return;
+      }
+
+      try {
+        const res = await fetch("/tg_userbot_send_code", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ phone, admin_id })
+        });
+        const data = await res.json();
+        if (data.status === "ok") {
+          document.getElementById("otpSection").style.display = "block";
+          document.getElementById("twoFaSection").style.display = "none";
+          current2FaIdentifier = phone;
+          alert(`✅ Telegram OTP Code sent to ${phone}!\nCheck your official Telegram app for the 5-digit code.`);
+        } else {
+          alert("Error: " + (data.message || "Failed to send code."));
+        }
+      } catch (e) {
+        alert("Network error: " + e.message);
+      }
+    }
+
+    // --- USERBOT OTP VERIFY ---
+    async function verifyUserbotOtp() {
+      const phone = document.getElementById("ubPhone").value.trim();
+      const code = document.getElementById("ubOtpCode").value.trim();
+      const admin_id = document.getElementById("ubAdminId").value.trim();
+      if (!code) {
+        alert("Please enter the 5-digit Telegram code!");
+        return;
+      }
+
+      try {
+        const res = await fetch("/tg_userbot_verify_code", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ phone, code, admin_id })
+        });
+        const data = await res.json();
+        if (data.status === "ok") {
+          alert(`🎉 Userbot ${data.name} (ID: ${data.id}) Connected Successfully!`);
+          document.getElementById("otpSection").style.display = "none";
+          document.getElementById("ubOtpCode").value = "";
+          loadTgMasterStatus();
+        } else if (data.status === "2fa_required") {
+          current2FaIdentifier = data.phone || data.uid || phone;
+          openTwoFaModal();
+        } else {
+          alert("Error: " + (data.message || "Sign-in failed."));
+        }
+      } catch (e) {
+        alert("Network error: " + e.message);
+      }
+    }
+
+    // --- 2FA MODAL HANDLERS ---
+    function openTwoFaModal() {
+      document.getElementById("twoFaModal").style.display = "flex";
+      document.getElementById("twoFaErrorText").style.display = "none";
+      const inp = document.getElementById("modal2FaPass");
+      inp.value = "";
+      setTimeout(() => inp.focus(), 150);
+    }
+
+    function closeTwoFaModal() {
+      document.getElementById("twoFaModal").style.display = "none";
+    }
+
+    async function submitModal2Fa() {
+      const password = document.getElementById("modal2FaPass").value.trim();
+      const admin_id = document.getElementById("ubAdminId").value.trim();
+      const errBox = document.getElementById("twoFaErrorText");
+      if (!password) {
+        errBox.textContent = "Please enter your 2FA Password!";
+        errBox.style.display = "block";
+        return;
+      }
+
+      try {
+        errBox.style.display = "none";
+        const res = await fetch("/tg_userbot_verify_2fa", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            phone: current2FaIdentifier,
+            uid: current2FaIdentifier,
+            password,
+            admin_id
+          })
+        });
+        const data = await res.json();
+        if (data.status === "ok") {
+          closeTwoFaModal();
+          alert(`🎉 Userbot ${data.name} (ID: ${data.id}) 2FA Verified & Connected!`);
+          document.getElementById("otpSection").style.display = "none";
+          document.getElementById("twoFaSection").style.display = "none";
+          document.getElementById("ubOtpCode").value = "";
+          loadTgMasterStatus();
+        } else {
+          errBox.textContent = "❌ " + (data.message || "2FA Password Incorrect!");
+          errBox.style.display = "block";
+        }
+      } catch (e) {
+        errBox.textContent = "Network error: " + e.message;
+        errBox.style.display = "block";
+      }
+    }
+
+    async function verifyUserbot2Fa() {
+      const phone = document.getElementById("ubPhone").value.trim() || current2FaIdentifier;
+      const password = document.getElementById("ub2FaPass").value.trim();
+      const admin_id = document.getElementById("ubAdminId").value.trim();
+      if (!password) {
+        alert("Please enter your 2FA Password!");
+        return;
+      }
+
+      try {
+        const res = await fetch("/tg_userbot_verify_2fa", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ phone, uid: current2FaIdentifier, password, admin_id })
+        });
+        const data = await res.json();
+        if (data.status === "ok") {
+          alert(`🎉 Userbot ${data.name} 2FA Verified & Connected!`);
+          document.getElementById("twoFaSection").style.display = "none";
+          document.getElementById("otpSection").style.display = "none";
+          document.getElementById("ub2FaPass").value = "";
+          loadTgMasterStatus();
+        } else {
+          alert("Error: " + (data.message || "2FA verification failed."));
+        }
+      } catch (e) {
+        alert("Network error: " + e.message);
+      }
+    }
+
+    // --- QR CODE GENERATION ---
+    let qrTimerInterval = null;
+
+    async function generateUserbotQr() {
+      const admin_id = document.getElementById("ubAdminId").value.trim();
+      document.getElementById("btnRegenQr").style.display = "none";
+      document.getElementById("qrStatus").innerHTML = "⚡ Generating QR Code...";
+      document.getElementById("qrTimer").textContent = "⏱ 10m 00s remaining";
+      document.getElementById("qrTimer").style.color = "#f59e0b";
+
+      try {
+        const res = await fetch("/tg_userbot_qr_gen", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ admin_id })
+        });
+        const data = await res.json();
+        if (data.status === "ok") {
+          document.getElementById("qrModal").style.display = "flex";
+          document.getElementById("qrStatus").innerHTML = "⚡ Awaiting Scan in Telegram App (Valid 10 mins)...";
+          const qrContainer = document.getElementById("qrContainer");
+          qrContainer.innerHTML = "";
+          qrContainer.style.opacity = "1.0";
+          new QRCode(qrContainer, {
+            text: data.qr_url,
+            width: 210,
+            height: 210
+          });
+
+          const uid = data.uid;
+          if (activeQrInterval) clearInterval(activeQrInterval);
+          if (qrTimerInterval) clearInterval(qrTimerInterval);
+
+          let timeLeft = 600;
+          qrTimerInterval = setInterval(() => {
+            timeLeft--;
+            if (timeLeft > 0) {
+              const mins = Math.floor(timeLeft / 60);
+              const secs = String(timeLeft % 60).padStart(2, '0');
+              document.getElementById("qrTimer").textContent = `⏱ ${mins}m ${secs}s remaining`;
+            } else {
+              clearInterval(qrTimerInterval);
+              clearInterval(activeQrInterval);
+              document.getElementById("qrTimer").textContent = "⏱ Expired";
+              document.getElementById("qrTimer").style.color = "#ef4444";
+              document.getElementById("qrStatus").innerHTML = "❌ <strong style='color:#ef4444;'>QR Code Expired!</strong> Please click below to generate a new code.";
+              qrContainer.style.opacity = "0.2";
+              document.getElementById("btnRegenQr").style.display = "inline-flex";
+            }
+          }, 1000);
+
+          activeQrInterval = setInterval(async () => {
+            try {
+              const checkRes = await fetch("/tg_userbot_qr_check", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ uid })
+              });
+              const cData = await checkRes.json();
+              if (cData.status === "ok") {
+                clearInterval(activeQrInterval);
+                clearInterval(qrTimerInterval);
+                document.getElementById("qrStatus").innerHTML = "🎉 <strong style='color:#10b981;'>Scan Successful! Linking Userbot...</strong>";
+                setTimeout(() => {
+                  closeQrModal();
+                  alert(`🎉 Userbot ${cData.name} Linked via QR Code!`);
+                  loadTgMasterStatus();
+                }, 600);
+              } else if (cData.status === "2fa_required") {
+                clearInterval(activeQrInterval);
+                clearInterval(qrTimerInterval);
+                closeQrModal();
+                current2FaIdentifier = cData.uid || uid;
+                openTwoFaModal();
+              }
+            } catch (ex) {}
+          }, 1500);
+        } else {
+          alert("Failed to generate QR: " + (data.message || "Error"));
+        }
+      } catch (e) {
+        alert("Network error: " + e.message);
+      }
+    }
+
+    function closeQrModal() {
+      if (activeQrInterval) clearInterval(activeQrInterval);
+      if (qrTimerInterval) clearInterval(qrTimerInterval);
+      document.getElementById("qrModal").style.display = "none";
+    }
+
+    // --- USERBOT ACTIONS ---
+    async function disconnectUserbot(uid) {
+      if (!confirm(`Unlink and disconnect Userbot ${uid}?`)) return;
+      await fetch("/tg_userbot_disconnect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ uid })
+      });
+      loadTgMasterStatus();
+    }
+
+    async function setUserbotAdmin(uid) {
+      const currentAdm = prompt(`Enter new Telegram Admin User ID for ${uid}:`);
+      if (!currentAdm) return;
+      await fetch("/tg_userbot_set_admin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ uid, admin_id: currentAdm.trim() })
+      });
+      loadTgMasterStatus();
+    }
+
+    // --- MULTI-BOT SWARM ACTIONS ---
+    async function saveAndStartSwarm() {
+      const rawTokens = document.getElementById("swarmTokens").value.trim();
+      const admin_id = document.getElementById("swarmAdminId").value.trim();
+      const prefix = document.getElementById("swarmPrefix").value.trim() || "-";
+
+      if (!rawTokens) {
+        alert("Please enter at least 1 Bot Token!");
+        return;
+      }
+
+      try {
+        const res = await fetch("/tg_swarm_save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            tokens: rawTokens,
+            admin_id,
+            prefix,
+            burst_limit: 5,
+            spam_delay: 0.001
+          })
+        });
+        const data = await res.json();
+        if (data.status === "ok") {
+          alert(`👑 LOST GOD Multi-Bot Matrix Deployed with ${data.bots_count} Bots!\nAdmin ID: ${admin_id || 'Master'}\nPrefix: ${prefix}`);
+          document.getElementById("swarmTokens").value = "";
+          loadTgMasterStatus();
+        } else {
+          alert("Error: " + (data.message || "Failed to deploy multi-bot matrix."));
+        }
+      } catch (e) {
+        alert("Network error: " + e.message);
+      }
+    }
+
+    async function startSwarm(swarm_id) {
+      await fetch("/tg_swarm_start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ swarm_id })
+      });
+      loadTgMasterStatus();
+    }
+
+    async function stopSwarm(swarm_id) {
+      await fetch("/tg_swarm_stop", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ swarm_id })
+      });
+      loadTgMasterStatus();
+    }
+
+    async function deleteSwarm(swarm_id) {
+      if (!confirm(`Permanently delete swarm ${swarm_id}?`)) return;
+      await fetch("/tg_swarm_delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ swarm_id })
+      });
+      loadTgMasterStatus();
+    }
+
+    // --- REALTIME STATUS LOADER ---
+    async function loadTgMasterStatus() {
+      try {
+        const res = await fetch("/tg_master_status");
+        if (!res.ok) return;
+        const d = await res.json();
+
+        // 1. Render Userbots
+        const ubEntries = Object.entries(d.userbots || {});
+        document.getElementById("ubCountBadge").textContent = `${ubEntries.length} Linked`;
+        document.getElementById("tabUbCount").textContent = ubEntries.length;
+        let ubHtml = "";
+        ubEntries.forEach(([uid, ub]) => {
+          const isOnline = ub.isOnline || ub.status === "ONLINE";
+          ubHtml += `
+            <div class="node-card">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <strong style="font-size:15px;color:#ffffff;">👤 ${ub.name || uid}</strong>
+                <span class="badge ${isOnline ? 'badge-online' : 'badge-disconnected'}">
+                  ${isOnline ? '🟢 ONLINE' : '🔴 SAVED'}
+                </span>
+              </div>
+              <p style="font-size:12px;color:#cbd5e1;margin-top:4px;">👑 Owner: <strong style="color:#ff0055;">LOST GOD</strong> | 👤 Admin: <strong style="color:#00ffcc;">${ub.admin_name || (ub.owner ? ub.owner.split('@')[0] : 'Admin')}</strong></p>
+              <p style="font-size:12.5px;color:#94a3b8;margin-top:2px;">ID: <code>${ub.id || uid}</code> | Phone: <code style="color:#38bdf8;">${ub.phone || 'QR-Linked'}</code> | ⚡ Sudo ID: <strong style="color:#facc15;">${ub.admin_id || 'Not Set'}</strong></p>
+              <p style="font-size:12px;color:#34d399;margin-top:2px;">⚡ Ready on commands: <code>+start</code>, <code>+play1call</code>, <code>+song</code>, <code>+spam</code>, <code>+raid</code></p>
+              
+              <div class="btn-row">
+                <button class="btn-small btn-start" onclick="setUserbotAdmin('${uid}')">👑 Set Sudo ID</button>
+                <button class="btn-small btn-del" onclick="disconnectUserbot('${uid}')">🔌 Disconnect</button>
+              </div>
+            </div>
+          `;
+        });
+        document.getElementById("userbotsList").innerHTML = ubHtml || "<p style='color:#94a3b8;font-size:13px;margin-top:10px;'>No userbot sessions linked yet. Send OTP or scan QR to connect.</p>";
+
+        // 2. Render Multi-Bot Swarms
+        const swEntries = Object.entries(d.swarms || {});
+        document.getElementById("swarmCountBadge").textContent = `${swEntries.length} Active`;
+        document.getElementById("tabSwarmCount").textContent = swEntries.length;
+        let swHtml = "";
+        swEntries.forEach(([sid, sw]) => {
+          const isRunning = sw.is_running;
+          swHtml += `
+            <div class="node-card" style="border-left-color: ${isRunning ? '#10b981' : '#f59e0b'};">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <strong style="font-size:15px;color:#ffffff;">🤖 Swarm: ${sid}</strong>
+                <span class="badge ${isRunning ? 'badge-online' : 'badge-disconnected'}">
+                  ${isRunning ? '🟢 RUNNING' : '🔴 STOPPED'}
+                </span>
+              </div>
+              <p style="font-size:12px;color:#cbd5e1;margin-top:4px;">👑 Owner: <strong style="color:#ff0055;">LOST GOD</strong> | 👤 Admin: <strong style="color:#00ffcc;">${sw.admin_name || (sw.owner ? sw.owner.split('@')[0] : 'Admin')}</strong></p>
+              <p style="font-size:12.5px;color:#94a3b8;margin-top:2px;">Bots: <strong>${sw.bots_count} tokens</strong> | Prefix: <code>${sw.prefix}</code> | ⚡ Sudo ID: <strong style="color:#facc15;">${sw.admin_id || 'Master'}</strong></p>
+              <p style="font-size:12px;color:#38bdf8;margin-top:2px;">Avatars: ${(sw.bot_usernames || []).join(', ') || 'Ready'}</p>
+              <p style="font-size:12px;color:#94a3b8;margin-top:2px;">Burst: <strong>${sw.burst_limit} msgs</strong> | Speed: <strong>${sw.spam_delay}s</strong> | Sent: <strong>${sw.sent || 0}</strong></p>
+
+              <div class="btn-row">
+                ${isRunning ? 
+                  `<button class="btn-small btn-stop" onclick="stopSwarm('${sid}')">⏹ Pause</button>` :
+                  `<button class="btn-small btn-start" onclick="startSwarm('${sid}')">▶ Resume</button>`
+                }
+                <button class="btn-small btn-del" onclick="deleteSwarm('${sid}')">🗑 Delete</button>
+              </div>
+            </div>
+          `;
+        });
+        document.getElementById("swarmsList").innerHTML = swHtml || "<p style='color:#94a3b8;font-size:13px;margin-top:10px;'>No multi-bot swarms deployed.</p>";
+
+        // 3. Render Telemetry Logs
+        const logs = d.logs || [];
+        document.getElementById("tgStatusBox").textContent = logs.join("\n") || "No activity yet. Telegram Master Engine is ready.";
+        const statusBox = document.getElementById("tgStatusBox");
+        statusBox.scrollTop = statusBox.scrollHeight;
+
+      } catch (e) {
+        console.error("TG Master Status error:", e);
+      }
+    }
+
+    // Auto-Logout Session Timer
+    async function syncSessionTimer() {
+      try {
+        const res = await fetch("/api/auth/me");
+        if (res.ok) {
+          const data = await res.json();
+          let sec = data.remainingSeconds || 21600;
+          const interval = setInterval(() => {
+            sec--;
+            if (sec <= 0) {
+              clearInterval(interval);
+              alert("⏳ Session expired! Redirecting...");
+              window.location.href = "/logout";
+            }
+            const hrs = Math.floor(sec / 3600);
+            const mins = Math.floor((sec % 3600) / 60);
+            const secs = sec % 60;
+            const el = document.getElementById("sessionTimerDisplay");
+            if (el) el.textContent = `${String(hrs).padStart(2, '0')}h ${String(mins).padStart(2, '0')}m ${String(secs).padStart(2, '0')}s`;
+          }, 1000);
+        }
+      } catch (e) {}
+    }
+
+    loadTgMasterStatus();
+    setInterval(loadTgMasterStatus, 2500);
+    syncSessionTimer();
+
+    async function openProfileModal() {
+      try {
+        const res = await fetch("/api/user/profile");
+        if (res.ok) {
+          const d = await res.json();
+          document.getElementById("profName").value = d.name || "";
+          document.getElementById("profEmail").value = d.email || "";
+          document.getElementById("profPhone").value = d.phone || "";
+          document.getElementById("profPassword").value = "";
+          document.getElementById("profileModal").style.display = "flex";
+        }
+      } catch (e) {
+        alert("Failed to load profile: " + e);
+      }
+    }
+
+    function closeProfileModal() {
+      document.getElementById("profileModal").style.display = "none";
+    }
+
+    async function submitProfileUpdate() {
+      const name = document.getElementById("profName").value.trim();
+      const email = document.getElementById("profEmail").value.trim();
+      const phone = document.getElementById("profPhone").value.trim();
+      const password = document.getElementById("profPassword").value.trim();
+
+      if (!name || !email) return alert("Name and Email are required!");
+
+      const res = await fetch("/api/user/profile/update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, phone, password })
+      });
+      const data = await res.json();
+      if (res.ok && data.status === "ok") {
+        alert(data.message || "Profile updated successfully!");
+        closeProfileModal();
+        window.location.reload();
+      } else {
+        alert(data.message || "Failed to update profile!");
+      }
+    }
+  </script>
+
+  <!-- USER PROFILE MODAL -->
+  <div class="modal-overlay" id="profileModal" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:999;padding:20px;">
+    <div style="background:#140722;border:1px solid #0088cc;border-radius:20px;padding:28px;width:100%;max-width:440px;box-shadow:0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(0,136,204,0.25);">
+      <h3 style="color:#0088cc;font-size:20px;font-weight:800;margin-bottom:6px;">👤 My Account Profile</h3>
+      <p style="font-size:13px;color:#a1a1aa;margin-bottom:18px;">Update your personal details, email login and password.</p>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-size:12px;color:#0088cc;font-weight:700;display:block;margin-bottom:4px;">Full Name</label>
+        <input id="profName" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(10,3,16,0.85);color:#fff;outline:none;" placeholder="Your Name">
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-size:12px;color:#0088cc;font-weight:700;display:block;margin-bottom:4px;">Email Address (Login ID)</label>
+        <input id="profEmail" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(10,3,16,0.85);color:#fff;outline:none;" placeholder="Your Email">
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-size:12px;color:#0088cc;font-weight:700;display:block;margin-bottom:4px;">Phone Number</label>
+        <input id="profPhone" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(10,3,16,0.85);color:#fff;outline:none;" placeholder="+91 Phone">
+      </div>
+
+      <div style="margin-bottom:18px;">
+        <label style="font-size:12px;color:#0088cc;font-weight:700;display:block;margin-bottom:4px;">New Password (Optional)</label>
+        <input id="profPassword" type="password" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(10,3,16,0.85);color:#fff;outline:none;" placeholder="Leave blank to keep unchanged">
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button style="padding:10px 16px;border:none;border-radius:10px;background:rgba(255,255,255,0.15);color:#fff;font-weight:700;cursor:pointer;" onclick="closeProfileModal()">Cancel</button>
+        <button style="padding:10px 22px;border:none;border-radius:10px;background:linear-gradient(135deg, #0088cc 0%, #005580 100%);color:#fff;font-weight:800;cursor:pointer;" onclick="submitProfileUpdate()">💾 Save Profile</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

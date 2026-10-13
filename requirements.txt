@@ -1,0 +1,26 @@
+# ---- Telegram Master Engine : runtime dependencies ----
+
+# Core async web server (REST API for userbot OTP / 2FA / swarm control)
+aiohttp>=3.9,<4
+
+# Telegram engines
+Telethon>=1.34,<2
+py-tgcalls>=2.1,<3
+python-telegram-bot[httpx]>=20.7,<22
+pyTelegramBotAPI>=4.14
+
+# Media / voice
+yt-dlp>=2024.1.1
+gTTS>=2.5
+imageio-ffmpeg>=0.4.9
+
+# Images / QR
+Pillow>=10.0
+qrcode[pil]>=7.4
+
+# Data / persistence
+pymongo>=4.6
+pytz>=2023.3
+
+# HTTP client
+requests>=2.31

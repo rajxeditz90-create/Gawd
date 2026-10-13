@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ IGTGWP MASTER | User Access Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #08030c;
+      --card-bg: rgba(22, 10, 32, 0.75);
+      --card-border: rgba(255, 0, 85, 0.28);
+      --card-border-glow: rgba(255, 0, 85, 0.6);
+      --primary: #ff0055;
+      --primary-hover: #ff2a73;
+      --secondary: #00ffcc;
+      --secondary-glow: rgba(0, 255, 204, 0.4);
+      --accent: #facc15;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --input-bg: rgba(10, 3, 15, 0.85);
+      --input-border: rgba(255, 255, 255, 0.12);
+      --error-bg: rgba(239, 68, 68, 0.15);
+      --error-border: #ef4444;
+      --success-bg: rgba(16, 185, 129, 0.15);
+      --success-border: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(255, 0, 85, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(0, 255, 204, 0.1) 0%, transparent 45%),
+        linear-gradient(135deg, #090210 0%, #150522 50%, #06010b 100%);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 24px;
+      padding: 36px 32px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 35px rgba(255, 0, 85, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ff0055, #00ffcc, #ff0055);
+    }
+
+    .brand-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .brand-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #ffffff;
+      text-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
+    }
+
+    .brand-title span {
+      color: var(--primary);
+    }
+
+    .brand-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .tab-nav {
+      display: flex;
+      background: rgba(0, 0, 0, 0.45);
+      padding: 5px;
+      border-radius: 14px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 14px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(255, 0, 85, 0.4);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 12px rgba(255, 0, 85, 0.35);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary) 0%, #d60047 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 8px 20px rgba(255, 0, 85, 0.35);
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(255, 0, 85, 0.55);
+      background: linear-gradient(135deg, #ff1a69 0%, #ea004e 100%);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: none;
+      color: #e2e8f0;
+      padding: 10px 14px;
+      font-size: 13px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+    }
+
+    .otp-input-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .otp-code-box {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px;
+      letter-spacing: 8px;
+      text-align: center;
+      color: var(--secondary);
+      background: #000000;
+      border: 2px dashed rgba(0, 255, 204, 0.4);
+    }
+
+    .otp-code-box:focus {
+      border-color: var(--secondary);
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+    }
+
+    .alert {
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      margin-bottom: 18px;
+      display: none;
+      line-height: 1.4;
+    }
+
+    .alert-error {
+      background: var(--error-bg);
+      border: 1px solid var(--error-border);
+      color: #fca5a5;
+    }
+
+    .alert-success {
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      color: #86efac;
+    }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .auth-footer a {
+      color: var(--secondary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .auth-footer a:hover {
+      color: #5eead4;
+      text-decoration: underline;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      display: none;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 420px;
+      background: #14071f;
+      border: 1px solid var(--secondary);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 0 35px rgba(0, 255, 204, 0.25);
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(255, 0, 85, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(255, 0, 85, 0.3);
+      margin-bottom: 12px;
+    }
+
+    .timer-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    /* Mobile Phone App-Like Responsiveness */
+    @media (max-width: 480px) {
+      body {
+        padding: 12px;
+        align-items: flex-start;
+      }
+      .auth-card {
+        padding: 24px 18px;
+        border-radius: 20px;
+        margin-top: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      }
+      .brand-title {
+        font-size: 22px;
+      }
+      .form-input {
+        font-size: 16px;
+        padding: 13px 14px;
+      }
+      .tab-btn {
+        padding: 11px 8px;
+        font-size: 13px;
+      }
+      .btn-submit {
+        padding: 14px 18px;
+        font-size: 14px;
+      }
+      .modal-card {
+        padding: 22px 18px;
+        border-radius: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-card">
+    <div class="brand-header">
+      <span class="badge">🔥 LOST GOD</span>
+      <h1 class="brand-title">👑 <span>IGTGWP</span> MASTER</h1>
+      <p class="brand-subtitle">Instagram • Telegram • WhatsApp Automation</p>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-nav">
+      <button class="tab-btn active" id="tabSignInBtn" onclick="switchTab('signin')">Sign In</button>
+      <button class="tab-btn" id="tabRegisterBtn" onclick="switchTab('register')">Register</button>
+      <button class="tab-btn" id="tabForgotBtn" onclick="switchTab('forgot')">Forgot</button>
+    </div>
+
+    <!-- Alert Box -->
+    <div id="authAlert" class="alert"></div>
+
+    <!-- ================= 1. SIGN IN FORM ================= -->
+    <div id="signInTab">
+      <form id="signInForm" onsubmit="handleSignIn(event)">
+        <div class="form-group">
+          <label class="form-label">Registered Email</label>
+          <input type="email" id="loginEmail" class="form-input" placeholder="name@example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" id="loginSubmitBtn" class="btn-submit">
+          ⚡ SIGN IN TO PANEL
+        </button>
+      </form>
+    </div>
+
+    <!-- ================= 2. REGISTER FORM ================= -->
+    <div id="registerTab" style="display: none;">
+      <form id="registerForm" onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label class="form-label">Your Name</label>
+          <input type="text" id="regName" class="form-input" placeholder="Full Name or Clan Alias" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Gmail Address</label>
+          <div class="otp-input-row">
+            <input type="email" id="regEmail" class="form-input" placeholder="yourgmail@gmail.com" required>
+            <button type="button" id="btnSendRegOtp" class="btn-secondary" style="white-space:nowrap;" onclick="sendRegOtp()">
+              Send OTP
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group" id="regOtpGroup" style="display: none;">
+          <div id="regOtpCard" style="display:none;background:rgba(0,255,204,0.12);border:1px dashed #00ffcc;border-radius:12px;padding:12px;margin-bottom:12px;text-align:center;">
+            <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;">🔑 Registration Verification OTP</div>
+            <div id="regOtpValue" style="font-size:24px;font-weight:900;color:#00ffcc;letter-spacing:6px;font-family:'JetBrains Mono',monospace;margin:4px 0;">------</div>
+            <div style="font-size:11px;color:#cbd5e1;">(Also sent to your Gmail / Master Code: <strong style="color:#facc15;">950732</strong>)</div>
+          </div>
+          <label class="form-label" style="color:var(--secondary);">Enter 6-Digit Email OTP</label>
+          <div class="otp-input-row">
+            <input type="text" id="regOtp" maxlength="6" class="form-input otp-code-box" placeholder="000000">
+            <button type="button" id="btnVerifyRegOtp" class="btn-secondary" style="background:var(--secondary);color:#000;font-weight:bold;" onclick="verifyRegOtp()">
+              Verify
+            </button>
+          </div>
+          <div id="regOtpTimer" class="timer-text"></div>
+          <p style="font-size:11px;color:#94a3b8;margin-top:4px;">📬 OTP sent to your Gmail. Please check your Inbox, Spam or Promotions folder.</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="text" id="regPhone" class="form-input" placeholder="+91 9507325677" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Create Password</label>
+          <input type="password" id="regPassword" class="form-input" placeholder="Minimum 6 characters" required>
+        </div>
+
+        <button type="submit" id="regSubmitBtn" class="btn-submit" disabled>
+          ✅ COMPLETE REGISTRATION
+        </button>
+      </form>
+    </div>
+
+    <!-- ================= 3. FORGOT PASSWORD FORM ================= -->
+    <div id="forgotTab" style="display: none;">
+      <form id="forgotForm" onsubmit="handleForgotPassword(event)">
+        <div class="form-group">
+          <label class="form-label">Registered Gmail Address</label>
+          <div class="otp-input-row">
+            <input type="email" id="forgotEmail" class="form-input" placeholder="yourgmail@gmail.com" required>
+            <button type="button" id="btnSendForgotOtp" class="btn-secondary" style="white-space:nowrap;" onclick="sendForgotOtp()">
+              Send OTP
+            </button>
+          </div>
+        </div>
+
+        <div id="forgotStep2" style="display: none;">
+          <div id="forgotOtpCard" style="display:none;background:rgba(250,204,21,0.12);border:1px dashed #facc15;border-radius:12px;padding:12px;margin-bottom:12px;text-align:center;">
+            <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;">🔑 Password Reset OTP</div>
+            <div id="forgotOtpValue" style="font-size:24px;font-weight:900;color:#facc15;letter-spacing:6px;font-family:'JetBrains Mono',monospace;margin:4px 0;">------</div>
+            <div style="font-size:11px;color:#cbd5e1;">(Also sent to your Gmail / Master Code: <strong style="color:#00ffcc;">950732</strong>)</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="color:var(--accent);">Enter 6-Digit Reset OTP</label>
+            <input type="text" id="forgotOtp" maxlength="6" class="form-input otp-code-box" style="color:var(--accent);border-color:var(--accent);" placeholder="000000" required>
+            <p style="font-size:11px;color:#94a3b8;margin-top:4px;">📬 Password reset OTP sent to your Gmail. Check your Inbox & Spam folder.</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input type="password" id="forgotNewPassword" class="form-input" placeholder="Enter new password" required>
+          </div>
+
+          <button type="submit" id="forgotSubmitBtn" class="btn-submit" style="background:linear-gradient(135deg, #eab308 0%, #ca8a04 100%);">
+            🔑 RESET PASSWORD & SIGN IN
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="auth-footer">
+      <p>Are you a Clan Owner? <a href="/owner/login">👑 Owner Access Portal</a></p>
+    </div>
+  </div>
+
+  <!-- ================= LOGIN OTP MODAL ================= -->
+  <div id="loginOtpModal" class="modal-overlay">
+    <div class="modal-card">
+      <h2 style="color:var(--secondary);margin-bottom:8px;font-size:20px;">🔐 Security Verification</h2>
+      
+      <!-- Live OTP Display on Website -->
+      <div id="loginModalOtpCard" style="display:none;background:rgba(0,255,204,0.12);border:1px dashed #00ffcc;border-radius:14px;padding:14px;margin-bottom:16px;">
+        <div style="font-size:11px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;">🔑 Your Sign-In Security OTP</div>
+        <div id="modalOtpValue" style="font-size:28px;font-weight:900;color:#00ffcc;letter-spacing:8px;font-family:'JetBrains Mono',monospace;margin:6px 0;">------</div>
+        <div style="font-size:11px;color:#cbd5e1;">(Or use Master Bypass: <strong style="color:#facc15;">950732</strong>)</div>
+      </div>
+
+      <p style="font-size:13px;color:#94a3b8;margin-bottom:16px;">
+        Verification OTP sent for <strong id="modalMaskedEmail" style="color:#ffffff;"></strong>. Enter the 6-digit code below:
+      </p>
+
+      <div class="form-group">
+        <input type="text" id="loginModalOtp" maxlength="6" class="form-input otp-code-box" placeholder="000000" autofocus>
+      </div>
+
+      <div id="loginModalTimer" class="timer-text" style="margin-bottom:16px;"></div>
+
+      <div style="display:flex;gap:10px;">
+        <button type="button" class="btn-secondary" style="flex:1;" onclick="closeLoginModal()">Cancel</button>
+        <button type="button" class="btn-submit" style="flex:2;margin-top:0;background:var(--secondary);color:#000;" onclick="submitLoginOtp()">
+          VERIFY & ENTER
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let isRegEmailVerified = false;
+    let pendingLoginEmail = "";
+    let regCooldownInterval = null;
+    let loginCooldownInterval = null;
+
+    function showAlert(msg, isSuccess = false) {
+      const alert = document.getElementById("authAlert");
+      alert.textContent = msg;
+      alert.className = isSuccess ? "alert alert-success" : "alert alert-error";
+      alert.style.display = "block";
+    }
+
+    function hideAlert() {
+      document.getElementById("authAlert").style.display = "none";
+    }
+
+    function switchTab(tab) {
+      hideAlert();
+      document.getElementById("tabSignInBtn").classList.remove("active");
+      document.getElementById("tabRegisterBtn").classList.remove("active");
+      document.getElementById("tabForgotBtn").classList.remove("active");
+
+      document.getElementById("signInTab").style.display = "none";
+      document.getElementById("registerTab").style.display = "none";
+      document.getElementById("forgotTab").style.display = "none";
+
+      if (tab === "signin") {
+        document.getElementById("tabSignInBtn").classList.add("active");
+        document.getElementById("signInTab").style.display = "block";
+      } else if (tab === "register") {
+        document.getElementById("tabRegisterBtn").classList.add("active");
+        document.getElementById("registerTab").style.display = "block";
+      } else if (tab === "forgot") {
+        document.getElementById("tabForgotBtn").classList.add("active");
+        document.getElementById("forgotTab").style.display = "block";
+      }
+    }
+
+    // 1. SIGN IN SUBMIT
+    async function handleSignIn(e) {
+      e.preventDefault();
+      hideAlert();
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+      const btn = document.getElementById("loginSubmitBtn");
+
+      btn.disabled = true;
+      btn.textContent = "Verifying...";
+
+      try {
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          if (data.requireOtp) {
+            pendingLoginEmail = data.email;
+            document.getElementById("modalMaskedEmail").textContent = data.maskedEmail;
+            
+            // Show OTP on Website
+            if (data.otp) {
+              document.getElementById("modalOtpValue").textContent = data.otp;
+              document.getElementById("loginModalOtpCard").style.display = "block";
+              document.getElementById("loginModalOtp").value = data.otp;
+            } else {
+              document.getElementById("loginModalOtpCard").style.display = "none";
+            }
+
+            document.getElementById("loginOtpModal").style.display = "flex";
+            startModalCooldown();
+          } else {
+            showAlert(data.message || "Login successful! Redirecting...", true);
+            setTimeout(() => { window.location.href = data.redirect || "/mode"; }, 1000);
+          }
+        } else {
+          showAlert(data.message || "Invalid login credentials!");
+        }
+      } catch (err) {
+        showAlert("Server connection failed: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "⚡ SIGN IN TO PANEL";
+      }
+    }
+
+    // 2. SUBMIT LOGIN OTP MODAL
+    async function submitLoginOtp() {
+      const otp = document.getElementById("loginModalOtp").value.trim();
+      if (!otp || otp.length < 6) {
+        alert("Please enter the 6-digit OTP code.");
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/auth/verify-login-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: pendingLoginEmail, otp })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          document.getElementById("loginOtpModal").style.display = "none";
+          showAlert(data.message || "Login verified! Redirecting...", true);
+          setTimeout(() => { window.location.href = data.redirect || "/mode"; }, 1000);
+        } else {
+          alert(data.message || "Invalid OTP code!");
+        }
+      } catch (err) {
+        alert("Error verifying OTP: " + err.message);
+      }
+    }
+
+    function closeLoginModal() {
+      document.getElementById("loginOtpModal").style.display = "none";
+    }
+
+    // 3. SEND REGISTRATION OTP
+    async function sendRegOtp() {
+      hideAlert();
+      const email = document.getElementById("regEmail").value.trim();
+      const btn = document.getElementById("btnSendRegOtp");
+      if (!email || !email.includes("@")) {
+        showAlert("Enter a valid Gmail address to receive OTP!");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Sending...";
+
+      try {
+        const res = await fetch("/api/auth/send-register-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          showAlert(data.message, true);
+          document.getElementById("regOtpGroup").style.display = "block";
+          if (data.otp) {
+            document.getElementById("regOtpValue").textContent = data.otp;
+            document.getElementById("regOtpCard").style.display = "block";
+            document.getElementById("regOtp").value = data.otp;
+          }
+          startRegCooldown();
+        } else {
+          showAlert(data.message || "Failed to send OTP!");
+          btn.disabled = false;
+          btn.textContent = "Send OTP";
+        }
+      } catch (err) {
+        showAlert("Connection error: " + err.message);
+        btn.disabled = false;
+        btn.textContent = "Send OTP";
+      }
+    }
+
+    // 4. VERIFY REGISTRATION OTP
+    async function verifyRegOtp() {
+      hideAlert();
+      const email = document.getElementById("regEmail").value.trim();
+      const otp = document.getElementById("regOtp").value.trim();
+      const btn = document.getElementById("btnVerifyRegOtp");
+
+      if (!otp || otp.length < 6) {
+        showAlert("Enter the 6-digit OTP code!");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Checking...";
+
+      try {
+        const res = await fetch("/api/auth/verify-register-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, otp })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          isRegEmailVerified = true;
+          showAlert("Email Verified Successfully! You can now complete registration.", true);
+          btn.textContent = "✅ Verified";
+          btn.style.background = "#10b981";
+          btn.style.color = "#ffffff";
+          document.getElementById("regSubmitBtn").disabled = false;
+          document.getElementById("regEmail").readOnly = true;
+          document.getElementById("regOtp").readOnly = true;
+        } else {
+          showAlert(data.message || "Invalid OTP code!");
+          btn.disabled = false;
+          btn.textContent = "Verify";
+        }
+      } catch (err) {
+        showAlert("Verification error: " + err.message);
+        btn.disabled = false;
+        btn.textContent = "Verify";
+      }
+    }
+
+    // 5. COMPLETE REGISTRATION
+    async function handleRegister(e) {
+      e.preventDefault();
+      hideAlert();
+      if (!isRegEmailVerified) {
+        showAlert("Please verify your Email OTP first!");
+        return;
+      }
+
+      const name = document.getElementById("regName").value.trim();
+      const email = document.getElementById("regEmail").value.trim();
+      const phone = document.getElementById("regPhone").value.trim();
+      const password = document.getElementById("regPassword").value.trim();
+      const btn = document.getElementById("regSubmitBtn");
+
+      btn.disabled = true;
+      btn.textContent = "Creating Account...";
+
+      try {
+        const res = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, phone, password })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          showAlert(data.message || "Account registered successfully!", true);
+          setTimeout(() => { window.location.href = data.redirect || "/mode"; }, 1500);
+        } else {
+          showAlert(data.message || "Registration failed!");
+          btn.disabled = false;
+          btn.textContent = "✅ COMPLETE REGISTRATION";
+        }
+      } catch (err) {
+        showAlert("Registration error: " + err.message);
+        btn.disabled = false;
+        btn.textContent = "✅ COMPLETE REGISTRATION";
+      }
+    }
+
+    // 6. FORGOT PASSWORD OTP
+    async function sendForgotOtp() {
+      hideAlert();
+      const email = document.getElementById("forgotEmail").value.trim();
+      const btn = document.getElementById("btnSendForgotOtp");
+      if (!email || !email.includes("@")) {
+        showAlert("Enter your registered Gmail address!");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Sending...";
+
+      try {
+        const res = await fetch("/api/auth/forgot-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          showAlert(data.message, true);
+          document.getElementById("forgotStep2").style.display = "block";
+          if (data.otp) {
+            document.getElementById("forgotOtpValue").textContent = data.otp;
+            document.getElementById("forgotOtpCard").style.display = "block";
+            document.getElementById("forgotOtp").value = data.otp;
+          }
+          document.getElementById("forgotEmail").readOnly = true;
+          btn.textContent = "OTP Sent";
+        } else {
+          showAlert(data.message || "No registered account with this email!");
+          btn.disabled = false;
+          btn.textContent = "Send OTP";
+        }
+      } catch (err) {
+        showAlert("Error: " + err.message);
+        btn.disabled = false;
+        btn.textContent = "Send OTP";
+      }
+    }
+
+    // 7. RESET PASSWORD SUBMIT
+    async function handleForgotPassword(e) {
+      e.preventDefault();
+      hideAlert();
+      const email = document.getElementById("forgotEmail").value.trim();
+      const otp = document.getElementById("forgotOtp").value.trim();
+      const newPassword = document.getElementById("forgotNewPassword").value.trim();
+      const btn = document.getElementById("forgotSubmitBtn");
+
+      btn.disabled = true;
+      btn.textContent = "Resetting Password...";
+
+      try {
+        const res = await fetch("/api/auth/reset-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, otp, newPassword })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          showAlert(data.message || "Password reset successfully! Switch to Sign In.", true);
+          setTimeout(() => { switchTab("signin"); }, 2000);
+        } else {
+          showAlert(data.message || "Password reset failed!");
+        }
+      } catch (err) {
+        showAlert("Error: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "🔑 RESET PASSWORD & SIGN IN";
+      }
+    }
+
+    // Cooldown timers
+    function startRegCooldown() {
+      let seconds = 60;
+      const btn = document.getElementById("btnSendRegOtp");
+      btn.disabled = true;
+      clearInterval(regCooldownInterval);
+      regCooldownInterval = setInterval(() => {
+        seconds--;
+        btn.textContent = `Resend (${seconds}s)`;
+        if (seconds <= 0) {
+          clearInterval(regCooldownInterval);
+          btn.disabled = false;
+          btn.textContent = "Resend OTP";
+        }
+      }, 1000);
+    }
+
+    function startModalCooldown() {
+      let seconds = 60;
+      const timerEl = document.getElementById("loginModalTimer");
+      clearInterval(loginCooldownInterval);
+      loginCooldownInterval = setInterval(() => {
+        seconds--;
+        timerEl.textContent = `Code valid for 15 min. Resend code available in: ${seconds}s`;
+        if (seconds <= 0) {
+          clearInterval(loginCooldownInterval);
+          timerEl.textContent = "Didn't receive code? Please refresh and try again.";
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

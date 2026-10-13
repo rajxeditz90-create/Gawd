@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ IGTGWP MASTER | Control Mode</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #08030c;
+      --card-bg: rgba(22, 10, 32, 0.75);
+      --card-border: rgba(255, 0, 85, 0.28);
+      --primary: #ff0055;
+      --secondary: #00ffcc;
+      --accent: #facc15;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
+    body {
+      min-height: 100vh;
+      background: var(--bg-dark);
+      background-image:
+        radial-gradient(circle at 15% 20%, rgba(255, 0, 85, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(0, 255, 204, 0.1) 0%, transparent 45%),
+        linear-gradient(135deg, #090210 0%, #150522 50%, #06010b 100%);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .wrap { width: 100%; max-width: 760px; }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(24px);
+      border-radius: 24px;
+      padding: 36px 32px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 35px rgba(255,0,85,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, #ff0055, #00ffcc, #ff0055);
+    }
+    .title { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+    .sub { font-size: 13px; color: var(--text-muted); margin-bottom: 26px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+    .stat {
+      background: rgba(10,3,15,0.7);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 18px;
+    }
+    .stat .label { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--secondary); font-weight: 700; }
+    .stat .value { font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 700; margin-top: 8px; }
+    .status-row { display: flex; align-items: center; gap: 8px; margin-top: 22px; font-size: 13px; color: var(--text-muted); }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+    .dot.up { background: #10b981; box-shadow: 0 0 10px #10b981; }
+    .dot.down { background: #ef4444; box-shadow: 0 0 10px #ef4444; }
+    .links { margin-top: 26px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; gap: 14px; flex-wrap: wrap; }
+    .links a {
+      color: var(--primary); text-decoration: none; font-weight: 700; font-size: 13px;
+      border: 1px solid rgba(255,0,85,0.35); padding: 9px 16px; border-radius: 10px;
+    }
+    .links a:hover { background: rgba(255,0,85,0.12); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1 class="title">⚡ CONTROL MODE</h1>
+      <p class="sub">Access granted. Live engine status below.</p>
+
+      <div class="grid">
+        <div class="stat"><div class="label">Userbots</div><div class="value" id="userbots">–</div></div>
+        <div class="stat"><div class="label">Swarms</div><div class="value" id="swarms">–</div></div>
+        <div class="stat"><div class="label">Uptime</div><div class="value" id="uptime">–</div></div>
+      </div>
+
+      <div class="status-row">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusText">Checking engine health…</span>
+      </div>
+
+      <div class="links">
+        <a href="/health" target="_blank">/health</a>
+        <a href="/status" target="_blank">/status</a>
+        <a href="/login">Switch account</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function fmtUptime(sec) {
+      if (sec == null) return "–";
+      const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+      return `${h}h ${m}m ${s}s`;
+    }
+    async function refresh() {
+      const dot = document.getElementById("statusDot");
+      const txt = document.getElementById("statusText");
+      try {
+        const res = await fetch("/health");
+        const data = await res.json();
+        dot.className = "dot up";
+        txt.textContent = "Engine online";
+        document.getElementById("userbots").textContent = data.userbots_count ?? "0";
+        document.getElementById("swarms").textContent = data.swarms_count ?? "0";
+        document.getElementById("uptime").textContent = fmtUptime(data.uptime);
+      } catch (e) {
+        dot.className = "dot down";
+        txt.textContent = "Engine unreachable: " + e.message;
+      }
+    }
+    refresh();
+    setInterval(refresh, 10000);
+  </script>
+</body>
+</html>
