@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.session
+*.session-journal
+*.db
+*.sqlite3
+.env
+.env.*
+.git
+.gitignore
+README.md
+render.yaml
